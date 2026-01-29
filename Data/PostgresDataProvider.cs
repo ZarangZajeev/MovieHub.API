@@ -107,5 +107,43 @@ namespace MovieHub.API.Data
                 throw new Exception("Failed to release expired holds", ex);
             }
         }
+
+        public async Task<BookingDetailsDto> GetBookingDetailsAsync(string username, string bookingReference)
+        {
+            try
+            {
+                using var connection = new NpgsqlConnection(_connectionString);
+
+                var result = await connection.QueryFirstOrDefaultAsync<BookingDetailsDto>(
+                    "SELECT * FROM get_booking_details(@Username, @BookingReference);",
+                    new { Username = username, BookingReference = bookingReference }
+                );
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Failed to retrieve booking details for reference {bookingReference}", ex);
+            }
+        }
+
+        public async Task<IEnumerable<UserBookingDto>> GetUserBookingsAsync(string username)
+        {
+            try
+            {
+                using var connection = new NpgsqlConnection(_connectionString);
+
+                var result = await connection.QueryAsync<UserBookingDto>(
+                    "SELECT * FROM get_user_bookings(@Username);",
+                    new { Username = username }
+                );
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Failed to retrieve bookings for user {username}", ex);
+            }
+        }
     }
 }

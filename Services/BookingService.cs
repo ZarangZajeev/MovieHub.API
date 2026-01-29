@@ -20,5 +20,13 @@ namespace MovieHub.API.Services
         {
             return _dataProvider.ConfirmBookingAsync( request.ShowId, request.Username, request.Seats);
         }
+        public async Task<BookingDetailsDto> GetBookingDetailsAsync(string username, string bookingReference)
+        {
+            return await _dataProvider.GetBookingDetailsAsync(username, bookingReference);
+        }
+        public async Task<IEnumerable<UserBookingDto>> GetUserBookingsAsync(string username)
+        {
+            return await _dataProvider.GetUserBookingsAsync(username);
+        }
     }
 }

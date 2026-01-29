@@ -28,5 +28,27 @@ namespace MovieHub.API.Controllers
             var result = await _bookingService.ConfirmBookingAsync(request);
             return Ok(result);
         }
+
+        [HttpGet("details")]
+        public async Task<IActionResult> GetBookingDetails([FromQuery] string username, [FromQuery] string bookingReference)
+        {
+            var booking = await _bookingService.GetBookingDetailsAsync(username, bookingReference);
+
+            if (booking == null)
+                return NotFound(new { message = "Booking not found or not confirmed." });
+
+            return Ok(booking);
+        }
+
+        [HttpGet("user")]
+        public async Task<IActionResult> GetUserBookings([FromQuery] string username)
+        {
+            var bookings = await _bookingService.GetUserBookingsAsync(username);
+
+            if (bookings == null || !bookings.Any())
+                return NotFound(new { message = "No bookings found for this user." });
+
+            return Ok(bookings);
+        }
     }
 }
