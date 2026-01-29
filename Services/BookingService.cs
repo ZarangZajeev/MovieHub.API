@@ -16,5 +16,9 @@ namespace MovieHub.API.Services
         {
             return _dataProvider.HoldSeatsAsync(request.ShowId, request.Username, request.Seats);
         }
+        public Task<ConfirmBookingResponse> ConfirmBookingAsync(ConfirmBookingRequest request)
+        {
+            return _dataProvider.ConfirmBookingAsync( request.ShowId, request.Username, request.Seats);
+        }
     }
 }

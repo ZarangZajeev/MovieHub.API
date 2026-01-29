@@ -21,5 +21,12 @@ namespace MovieHub.API.Controllers
             var result = await _bookingService.HoldSeatsAsync(request);
             return Ok(result);
         }
+
+        [HttpPost("confirm")]
+        public async Task<IActionResult> ConfirmBooking([FromBody] ConfirmBookingRequest request)
+        {
+            var result = await _bookingService.ConfirmBookingAsync(request);
+            return Ok(result);
+        }
     }
 }

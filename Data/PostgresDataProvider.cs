@@ -70,5 +70,42 @@ namespace MovieHub.API.Data
                 throw new Exception($"Failed to hold seats for show ID {showId}", ex);
             }
         }
+
+        public async Task<ConfirmBookingResponse> ConfirmBookingAsync(int showId, string username, string[] seats)
+        {
+            try
+            {
+                using var connection = new NpgsqlConnection(_connectionString);
+
+                var result = await connection.QueryAsync<(string BookingReference, string BookedSeat)>(
+                    "SELECT * FROM confirm_booking(@showId, @username, @seats);",
+                    new { showId, username, seats }
+                );
+
+                return new ConfirmBookingResponse
+                {
+                    BookingReference = result.First().BookingReference,
+                    BookedSeats = result.Select(r => r.BookedSeat).ToArray()
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Failed to confirm booking for show ID {showId}", ex);
+            }
+        }
+
+
+        public async Task ReleaseExpiredHoldsAsync()
+        {
+            try
+            {
+                using var connection = new NpgsqlConnection(_connectionString);
+                await connection.ExecuteAsync("SELECT release_expired_holds();");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to release expired holds", ex);
+            }
+        }
     }
 }

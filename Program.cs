@@ -13,6 +13,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IShowService, ShowService>();
 builder.Services.AddScoped<IPostgresDataProvider, PostgresDataProvider>();
+builder.Services.AddHostedService<SeatHoldCleanupService>();
 
 var app = builder.Build();
 

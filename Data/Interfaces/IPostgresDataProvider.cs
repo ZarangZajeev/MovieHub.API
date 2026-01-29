@@ -7,5 +7,7 @@ namespace MovieHub.API.Data.Interfaces
         Task<IEnumerable<ShowDetailsDto>> GetActiveShowsAsync();
         Task<SpecificShowDetails> GetShowSeatDetailsAsync(int showId);
         Task<HoldSeatsResponse> HoldSeatsAsync(int showId, string username, string[] seats);
+        Task<ConfirmBookingResponse> ConfirmBookingAsync(int showId, string username, string[] seats);
+        Task ReleaseExpiredHoldsAsync();
     }
 }
