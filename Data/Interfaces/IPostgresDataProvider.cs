@@ -1,0 +1,11 @@
+﻿using MovieHub.API.Models;
+
+namespace MovieHub.API.Data.Interfaces
+{
+    public interface IPostgresDataProvider
+    {
+        Task<IEnumerable<ShowDetailsDto>> GetActiveShowsAsync();
+        Task<SpecificShowDetails> GetShowSeatDetailsAsync(int showId);
+        Task<HoldSeatsResponse> HoldSeatsAsync(int showId, string username, string[] seats);
+    }
+}
