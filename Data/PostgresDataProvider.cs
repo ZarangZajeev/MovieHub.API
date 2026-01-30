@@ -54,13 +54,25 @@ namespace MovieHub.API.Data
             {
                 using var connection = new NpgsqlConnection(_connectionString);
 
-                var result = await connection.QueryAsync<(string HeldSeat, DateTime HoldExpiry)>(
-                    "SELECT * FROM hold_seats(@showId, @username, @seats);",
-                    new { showId, username, seats }
-                );
+                var result = (await connection.QueryAsync<(int Status, string HeldSeat, DateTime? HoldExpiry)>("SELECT * FROM hold_seats(@showId, @username, @seats);", new { showId, username, seats } )).ToList();
+
+                var status = result.First().Status;
+
+                if (status == 2)
+                {
+                    return new HoldSeatsResponse
+                    {
+                        Status = 2,
+                        Message = "One or more seats are already held or booked by another user",
+                        HeldSeats = Array.Empty<string>(),
+                        HoldExpiry = null
+                    };
+                }
 
                 return new HoldSeatsResponse
                 {
+                    Status = 1,
+                    Message = "Seats held successfully",
                     HeldSeats = result.Select(r => r.HeldSeat).ToArray(),
                     HoldExpiry = result.First().HoldExpiry
                 };
@@ -77,15 +89,27 @@ namespace MovieHub.API.Data
             {
                 using var connection = new NpgsqlConnection(_connectionString);
 
-                var result = await connection.QueryAsync<(string BookingReference, string BookedSeat)>(
-                    "SELECT * FROM confirm_booking(@showId, @username, @seats);",
-                    new { showId, username, seats }
-                );
+                var result = (await connection.QueryAsync<(int Status, string Message, string BookingReference, string BookedSeat)>("SELECT * FROM confirm_booking(@showId, @username, @seats);", new { showId, username, seats })).ToList();
+
+                if (!result.Any() || result.First().Status == 2)
+                {
+                    return new ConfirmBookingResponse
+                    {
+                        Status = 2,
+                        Message = result.FirstOrDefault().Message
+                            ?? "Please hold seats before confirming"
+                    };
+                }
 
                 return new ConfirmBookingResponse
                 {
+                    Status = 1,
+                    Message = result.First().Message,
                     BookingReference = result.First().BookingReference,
-                    BookedSeats = result.Select(r => r.BookedSeat).ToArray()
+                    BookedSeats = result
+                        .Where(r => r.BookedSeat != null)
+                        .Select(r => r.BookedSeat)
+                        .ToArray()
                 };
             }
             catch (Exception ex)
