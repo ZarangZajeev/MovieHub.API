@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MovieHub.API.Models;
 using MovieHub.API.Services.Interfaces;
 
 namespace MovieHub.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/bookings")]
     public class BookingController : ControllerBase

@@ -11,7 +11,7 @@ namespace MovieHub.API.Data
 
         public PostgresDataProvider(IConfiguration config)
         {
-            _connectionString = config.GetConnectionString("PostgresDb");
+            _connectionString = config.GetConnectionString("connectionDb");
         }
 
         public async Task<IEnumerable<ShowDetailsDto>> GetActiveShowsAsync()
@@ -168,6 +168,11 @@ namespace MovieHub.API.Data
             {
                 throw new Exception($"Failed to retrieve bookings for user {username}", ex);
             }
+        }
+
+        public Task<bool> UserExistsAsync(string email, string googleid)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MovieHub.API.Services.Interfaces;
 
 namespace MovieHub.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/shows")]
     public class ShowsController : ControllerBase
