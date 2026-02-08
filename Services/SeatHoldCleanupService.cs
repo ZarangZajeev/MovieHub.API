@@ -1,5 +1,4 @@
-﻿using MovieHub.API.Data.Factory;
-using MovieHub.API.Data.Interfaces;
+﻿using MovieHub.API.Data.Interfaces;
 
 namespace MovieHub.API.Services
 {
@@ -24,10 +23,11 @@ namespace MovieHub.API.Services
             {
                 try
                 {
+                    // Create a new scope
                     using var scope = _scopeFactory.CreateScope();
-                    var factory = scope.ServiceProvider.GetRequiredService<DataProviderFactory>();
-                    var dataProvider = factory.Create();
+                    var dataProvider = scope.ServiceProvider.GetRequiredService<IPostgresDataProvider>();
 
+                    // Call the PostgreSQL function to release expired holds
                     await dataProvider.ReleaseExpiredHoldsAsync();
 
                     _logger.LogInformation("Released expired seat holds at {Time}", DateTime.Now);

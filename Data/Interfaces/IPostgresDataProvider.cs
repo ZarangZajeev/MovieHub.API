@@ -11,6 +11,5 @@ namespace MovieHub.API.Data.Interfaces
         Task ReleaseExpiredHoldsAsync();
         Task<BookingDetailsDto> GetBookingDetailsAsync(string username, string bookingReference);
         Task<IEnumerable<UserBookingDto>> GetUserBookingsAsync(string username);
-        Task<bool> UserExistsAsync(string email, string googleid);
     }
 }
