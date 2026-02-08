@@ -1,4 +1,5 @@
-﻿using MovieHub.API.Data.Interfaces;
+﻿using MovieHub.API.Data.Factory;
+using MovieHub.API.Data.Interfaces;
 using MovieHub.API.Models;
 using MovieHub.API.Services.Interfaces;
 
@@ -8,9 +9,9 @@ namespace MovieHub.API.Services
     {
         private readonly IPostgresDataProvider _dataProvider;
 
-        public ShowService(IPostgresDataProvider dataProvider)
+        public ShowService(DataProviderFactory factory)
         {
-            _dataProvider = dataProvider;
+            _dataProvider = factory.Create();
         }
 
         public Task<IEnumerable<ShowDetailsDto>> GetActiveShowsAsync()
